@@ -6,4 +6,8 @@ This will download a single book of your choice. Each book has a variable number
 EyeD3 is used to automatically tag the files and insert cover art, complete with comments and website url.    
 There are 1303 mp3's in total    
 
-![ScreenShot](https://raw.githubusercontent.com/optio50/Thru-The-Bible/main/Thru-The-Bible.png?raw=true|alt=octocat)
+![ScreenShot](https://raw.githubusercontent.com/optio50/Thru-The-Bible/main/Thru-The-Bible.png?raw=true|alt=octocat)    
+Thru the Bible takes listeners through the entire Bible in just five years,     
+threading back and forth between the Old and New Testaments. You can begin the    
+study at any time. When we've concluded Revelation, we'll start over again in    
+Genesis, so if you're with us for five years you won't miss any part of the Bible.

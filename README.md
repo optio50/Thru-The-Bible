@@ -11,7 +11,7 @@ Install & Run
 `git clone https://github.com/optio50/Thru-The-Bible`    
 `cd Thru-The-Bible`    
 `chmod +x Thru-The-Bible.py`    
-`Thru-The-Bible.py`
+`./Thru-The-Bible.py`
 
 ![ScreenShot](https://raw.githubusercontent.com/optio50/Thru-The-Bible/main/Thru-The-Bible.png?raw=true|alt=octocat)    
 Welcome aboard the "Bible Bus"—what Dr. J. Vernon McGee affectionately called our five-year journey through the whole Word of God.    

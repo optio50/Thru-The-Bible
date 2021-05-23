@@ -10,7 +10,7 @@ https://ttb.org/programs/the-5-year-study
 Install & Run    
 git clone https://github.com/optio50/Thru-The-Bible    
 cd Thru-The-Bible    
-chmod +x Thru-The-Bible.py
+chmod +x Thru-The-Bible.py    
 Thru-The-Bible.py
 
 ![ScreenShot](https://raw.githubusercontent.com/optio50/Thru-The-Bible/main/Thru-The-Bible.png?raw=true|alt=octocat)    

@@ -122,7 +122,7 @@ def eyed3_info():
     #global error_log
     try:
 
-        print("\033[1A","\033[1G","\033[J")
+        print("\033[2A","\033[1G","\033[J")
         print('EyeD3 MP3 Tagger\n')
         print(colors.fg.purple, "Setting mp3 Tags \t[✔]\n")
         audiofile = eyed3.load(filename)
@@ -138,21 +138,20 @@ def eyed3_info():
         audiofile.tag.images.set(3, open('FRONT_COVER1.jpg','rb').read(), 'image/jpeg')
         audiofile.tag.save(filename, version=(2, 3, 0))
         print(colors.fg.cyan, "Displaying mp3 Tags \t[✔]\n")
-        print(colors.fg.green, "File Name:......: ", filename, colors.reset, sep="")
-        print(colors.fg.orange, end="")
         audiofile = eyed3.load(filename)
-        print('Artist..........:', audiofile.tag.artist)
-        print('Title...........:', audiofile.tag.title)
-        print('Album...........:', audiofile.tag.album)
-        print('Album Artist....:', audiofile.tag.album_artist)
-        print('Duration........:', duration_from_seconds(audiofile.info.time_secs))
-        print('Filesize........:', "{0:.2f}".format(audiofile.info.size_bytes / 1048576),'MB')
-        print('BitRate.........:', audiofile.info.bit_rate_str)
-        print('Sample Rate.....:', audiofile.info.sample_freq)
-        print('Mode............:', audiofile.info.mode)
-        print('Genre...........:', audiofile.tag.genre)
-        print('Website.........:', audiofile.tag.artist_url.decode('UTF-8'))
-        print('Comment.........: ', end="")
+        print(colors.fg.grey,'File Name:......: ',colors.fg.green, filename, sep="")
+        print(colors.fg.grey,'Artist..........: ',colors.fg.orange, audiofile.tag.artist, sep="")
+        print(colors.fg.grey,'Title...........: ',colors.fg.orange, audiofile.tag.title, sep="")
+        print(colors.fg.grey,'Album...........: ',colors.fg.orange, audiofile.tag.album, sep="")
+        print(colors.fg.grey,'Album Artist....: ',colors.fg.orange, audiofile.tag.album_artist, sep="")
+        print(colors.fg.grey,'Duration........: ',colors.fg.orange, duration_from_seconds(audiofile.info.time_secs), sep="")
+        print(colors.fg.grey,'Filesize........: ',colors.fg.orange, "{0:.2f}".format(audiofile.info.size_bytes / 1048576),'MB', sep="")
+        print(colors.fg.grey,'BitRate.........: ',colors.fg.orange, audiofile.info.bit_rate_str, sep="")
+        print(colors.fg.grey,'Sample Rate.....: ',colors.fg.orange, audiofile.info.sample_freq, sep="")
+        print(colors.fg.grey,'Mode............: ',colors.fg.orange, audiofile.info.mode, sep="")
+        print(colors.fg.grey,'Genre...........: ',colors.fg.orange, audiofile.tag.genre, sep="")
+        print(colors.fg.grey,'Website.........: ',colors.fg.orange, audiofile.tag.artist_url.decode('UTF-8'), sep="")
+        print(colors.fg.grey,'Comment.........: ', sep="", end="")
         print(colors.fg.lightblue, end="")
         print(audiofile.tag.comments[0].text)
     except Exception:
@@ -178,7 +177,8 @@ def eyed3_info():
 def wget_cmd(mp3_url):
     #if os.path.isfile(filename):
         #os.remove(filename)
-
+    print(colors.fg.grey,"Brief Random Delay to avoid remote server congestion ")
+    sleep(randint(3,8))
     print(colors.fg.lightblue, "Downloading........", filename,colors.fg.grey)
     wget.download(mp3_url, out=filename)
 
@@ -335,7 +335,6 @@ book = books()
 title_links, mp3_links, book_mp3 = menu()
 end_num = len(title_links)
 count = 1
-delay = 0
 while count <= end_num:
 
     try:
@@ -348,18 +347,12 @@ while count <= end_num:
     if os.path.isfile(filename):
         print(colors.fg.brown, "Existing File Found......Skipping", colors.fg.orange, title, colors.reset)
         count = count + 1
-        delay = 0
         continue
     print(colors.reset, "=" * 70)
     print(colors.fg.lime,"File {} of {}".format(count, end_num))
-    if book_mp3 == 68 and delay == 1:
-        print(colors.fg.grey,"Brief Delay to avoid remote server congestion ")
-        sleep(randint(5,15))
-        print("\033[1A","\033[1G","\033[J")
     wget_cmd(mp3_links[count-1])
     error_log = eyed3_info()
     count = count + 1
-    delay = 1
 if error_log == 1:
     print('*'*70)
     print(colors.fg.red,"Some Errors were encountered. Check Log file --->  Get-Vernon.log",colors.reset)

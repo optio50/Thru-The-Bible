@@ -11,7 +11,7 @@ Install & Run
 `git clone https://github.com/optio50/Thru-The-Bible`    
 `cd Thru-The-Bible`    
 `chmod +x Thru-The-Bible.py`    
-pip install lxml requests bs4 wget eyed3    
+`pip install lxml requests bs4 wget eyed3`    
 `./Thru-The-Bible.py`
 
 ![ScreenShot](https://raw.githubusercontent.com/optio50/Thru-The-Bible/main/Thru-The-Bible.png?raw=true|alt=octocat)    

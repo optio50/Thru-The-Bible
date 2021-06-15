@@ -15,14 +15,15 @@ import textwrap
 from random import randint
 from time import sleep
 
+
 def signal_handler(sig, frame):
     print('')
     if filename == "":
         sys.exit(0)
-        #print(filename)
-    print(colors.fg.red,"Ctrl+C Detected:   Removing Incomplete File ---->  ", filename, colors.reset)
+        # print(filename)
+    print(colors.fg.red, "Ctrl+C Detected:   Removing Incomplete File ---->  ", filename, colors.reset)
     for file in glob.glob(filename + '*tmp'):
-        #print(file)
+        # print(file)
         os.remove(file)
     sys.exit(0)
 
@@ -114,15 +115,15 @@ def duration_from_seconds(s):
     m, s = divmod(s, 60)
     h, m = divmod(m, 60)
     d, h = divmod(h, 24)
-    timelapsed = "{:02d}:{:02d}:{:02d}  (hh:mm:ss)".format(int(h),int(m),int(s))
+    timelapsed = "{:02d}:{:02d}:{:02d}  (hh:mm:ss)".format(int(h), int(m), int(s))
     return timelapsed
 
 
 def eyed3_info():
-    #global error_log
+    # global error_log
     try:
 
-        print("\033[2A","\033[1G","\033[J")
+        print("\033[2A", "\033[1G", "\033[J")
         print('EyeD3 MP3 Tagger\n')
         print(colors.fg.purple, "Setting mp3 Tags \t[✔]\n")
         audiofile = eyed3.load(filename)
@@ -135,23 +136,25 @@ def eyed3_info():
         audiofile.tag.title = title
         audiofile.tag.comments.set(comment)
         audiofile.tag.artist_url = bytes("http://ttb.org", encoding='utf8')
-        audiofile.tag.images.set(3, open('FRONT_COVER1.jpg','rb').read(), 'image/jpeg')
+        audiofile.tag.images.set(3, open('FRONT_COVER1.jpg', 'rb').read(), 'image/jpeg')
         audiofile.tag.save(filename, version=(2, 3, 0))
         print(colors.fg.cyan, "Displaying mp3 Tags \t[✔]\n")
         audiofile = eyed3.load(filename)
-        print(colors.fg.grey,'File Name:......: ',colors.fg.green, filename, sep="")
-        print(colors.fg.grey,'Artist..........: ',colors.fg.orange, audiofile.tag.artist, sep="")
-        print(colors.fg.grey,'Title...........: ',colors.fg.orange, audiofile.tag.title, sep="")
-        print(colors.fg.grey,'Album...........: ',colors.fg.orange, audiofile.tag.album, sep="")
-        print(colors.fg.grey,'Album Artist....: ',colors.fg.orange, audiofile.tag.album_artist, sep="")
-        print(colors.fg.grey,'Duration........: ',colors.fg.orange, duration_from_seconds(audiofile.info.time_secs), sep="")
-        print(colors.fg.grey,'Filesize........: ',colors.fg.orange, "{0:.2f}".format(audiofile.info.size_bytes / 1048576),'MB', sep="")
-        print(colors.fg.grey,'BitRate.........: ',colors.fg.orange, audiofile.info.bit_rate_str, sep="")
-        print(colors.fg.grey,'Sample Rate.....: ',colors.fg.orange, audiofile.info.sample_freq, sep="")
-        print(colors.fg.grey,'Mode............: ',colors.fg.orange, audiofile.info.mode, sep="")
-        print(colors.fg.grey,'Genre...........: ',colors.fg.orange, audiofile.tag.genre, sep="")
-        print(colors.fg.grey,'Website.........: ',colors.fg.orange, audiofile.tag.artist_url.decode('UTF-8'), sep="")
-        print(colors.fg.grey,'Comment.........: ', sep="", end="")
+        print(colors.fg.grey, 'File Name:......: ', colors.fg.green, filename, sep="")
+        print(colors.fg.grey, 'Artist..........: ', colors.fg.orange, audiofile.tag.artist, sep="")
+        print(colors.fg.grey, 'Title...........: ', colors.fg.orange, audiofile.tag.title, sep="")
+        print(colors.fg.grey, 'Album...........: ', colors.fg.orange, audiofile.tag.album, sep="")
+        print(colors.fg.grey, 'Album Artist....: ', colors.fg.orange, audiofile.tag.album_artist, sep="")
+        print(colors.fg.grey, 'Duration........: ', colors.fg.orange, duration_from_seconds(audiofile.info.time_secs),
+              sep="")
+        print(colors.fg.grey, 'Filesize........: ', colors.fg.orange,
+              "{0:.2f}".format(audiofile.info.size_bytes / 1048576), 'MB', sep="")
+        print(colors.fg.grey, 'BitRate.........: ', colors.fg.orange, audiofile.info.bit_rate_str, sep="")
+        print(colors.fg.grey, 'Sample Rate.....: ', colors.fg.orange, audiofile.info.sample_freq, sep="")
+        print(colors.fg.grey, 'Mode............: ', colors.fg.orange, audiofile.info.mode, sep="")
+        print(colors.fg.grey, 'Genre...........: ', colors.fg.orange, audiofile.tag.genre, sep="")
+        print(colors.fg.grey, 'Website.........: ', colors.fg.orange, audiofile.tag.artist_url, sep="")
+        print(colors.fg.grey, 'Comment.........: ', sep="", end="")
         print(colors.fg.lightblue, end="")
         print(audiofile.tag.comments[0].text)
     except Exception:
@@ -164,37 +167,38 @@ def eyed3_info():
         dt_string = now.strftime("%a %d %b %Y %H:%M:%S")
         print("Error Event Time:  ", dt_string)
         print("Mp3 File Error...EyeD3 Failed to set Tags for", filename)
-        print('='*75)
+        print('=' * 75)
         sys.stdout.close()
         sys.stdout = original
-        print(colors.fg.red,"Mp3 File Error...EyeD3 Failed to set Tags for ",colors.fg.pink, filename, colors.reset)
+        print(colors.fg.red, "Mp3 File Error...EyeD3 Failed to set Tags for ", colors.fg.pink, filename, colors.reset)
         return error_log
         pass
     print(colors.reset)
 
 
-
 def wget_cmd(mp3_url):
-    #if os.path.isfile(filename):
-        #os.remove(filename)
-    print(colors.fg.grey,"Brief Random Delay to avoid remote server congestion ")
-    sleep(randint(3,8))
-    print(colors.fg.lightblue, "Downloading........", filename,colors.fg.grey)
+    # if os.path.isfile(filename):
+    # os.remove(filename)
+    print(colors.fg.grey, "Brief Random Delay to avoid remote server congestion ")
+    sleep(randint(3, 8))
+    print(colors.fg.lightblue, "Downloading........", filename, colors.fg.grey)
     wget.download(mp3_url, out=filename)
 
 
 def get_data_files():
-    print(colors.fg.lightcyan,"Checking for Cover Art File", colors.reset)
+    print(colors.fg.lightcyan, "Checking for Cover Art File", colors.reset)
     if os.path.isfile('FRONT_COVER1.jpg'):
-        print(colors.fg.cyan,"Cover Art File Found [✔]", colors.reset)
+        print(colors.fg.cyan, "Cover Art File Found [✔]", colors.reset)
     else:
-        print(colors.fg.red,"Cover Art File not Found...[X]...A Sutiable Cover Art file named FRONT_COVER1.jpg is required.", colors.reset)
+        print(colors.fg.red,
+              "Cover Art File not Found...[X]...A Sutiable Cover Art file named FRONT_COVER1.jpg is required.",
+              colors.reset)
         quit()
-    print(colors.fg.lightcyan,"Checking for Data Files", colors.reset)
+    print(colors.fg.lightcyan, "Checking for Data Files", colors.reset)
     if os.path.isfile('vernon_mcgee-html-links.txt') and os.path.isfile('vernon_mcgee-mp3-links.txt'):
-        print(colors.fg.cyan,"Data Files Found [✔]", colors.reset)
+        print(colors.fg.cyan, "Data Files Found [✔]", colors.reset)
     else:
-        print(colors.fg.red,"Data Files not Found...[X]...Downloading New Data Files.", colors.reset)
+        print(colors.fg.red, "Data Files not Found...[X]...Downloading New Data Files.", colors.reset)
         if os.path.isfile('vernon_mcgee-html-links.txt'):
             os.remove('vernon_mcgee-html-links.txt')
         if os.path.isfile('vernon_mcgee-mp3-links.txt'):
@@ -208,16 +212,16 @@ def get_data_files():
             # link = soup.find_all(href="https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/listen/")
             link = soup.find_all("a", {'data-action': "archive"})
             # link = soup.find_all('a',attrs={'data-action':"archive"})[]['href']
-            #original_stdout = sys.stdout  # Save a reference to the original standard output
+            # original_stdout = sys.stdout  # Save a reference to the original standard output
 
             for links in link:
                 with open('vernon_mcgee-html-links.txt', 'a+') as file:
-                    #sys.stdout = file  # Change the standard output to the file we created.
+                    # sys.stdout = file  # Change the standard output to the file we created.
                     soup.find_all("a", href=True)
                     # a_file.write(str(links) + '\n')
                     file.write(links['href'] + '\n')
-                    #print(links['href'])
-                    #sys.stdout = original_stdout  # Reset the standard output to its original value
+                    # print(links['href'])
+                    # sys.stdout = original_stdout  # Reset the standard output to its original value
         src = "vernon_mcgee-html-links.txt"
         dst = "vernon_mcgee-mp3-links.txt"
         shutil.copyfile(src, dst)
@@ -235,7 +239,7 @@ def get_data_files():
         fin.write(data)
         # close the file
         fin.close()
-        print("\033[15A","\033[1G","\033[J")
+        print("\033[15A", "\033[1G", "\033[J")
 
 
 def bs4_title_cmd(html_url):
@@ -248,7 +252,7 @@ def bs4_title_cmd(html_url):
     # get the title from the H2 tag, strip leading white space and replace the funky double dash with a real double dash
     title = soup.find("div", class_="overlay2").h2.text.strip().replace('—', '--')
     # alternate method of getting the title
-    #title = soup.head.title.text.split(' -')[0].strip().replace('—', '--')
+    # title = soup.head.title.text.split(' -')[0].strip().replace('—', '--')
     return comment, title
 
 
@@ -259,38 +263,37 @@ def books():
         , "esther", "exodus", "ezekiel", "ezra", "galatians", "genesis", "habakkuk", "haggai"
         , "hebrews", "hosea", "isaiah", "james", "jeremiah", "job", "joel", "john", "jonah", "joshua", "jude", "judges"
         , "lamentations", "leviticus", "luke", "malachi", "mark", "matthew", "micah", "nahum", "nehemiah", "numbers"
-        , "obadiah","philemon", "philippians", "proverbs", "psalm", "revelation", "romans", "ruth", "song-of-solomon"
+        , "obadiah", "philemon", "philippians", "proverbs", "psalm", "revelation", "romans", "ruth", "song-of-solomon"
         , "titus", "zechariah", "zephaniah", "guidelines"]
     return book
 
 
 def menu():
     menu_banner = """
-1.  1-chronicles      24. ephesians   47. luke
-2.  1-corinthians     25. esther      48. malachi
-3.  1-john            26. exodus      49. mark
-4.  1-kings           27. ezekiel     50. matthew
-5.  1-peter           28. ezra        51. micah
-6.  1-samuel          29. galatians   52. nahum
-7.  1-thessalonians   30. genesis     53. nehemiah
-8.  1-timothy         31. habakkuk    54. numbers
-9.  2-chronicles      32. haggai      55. obadiah
-10. 2-corinthians     33. hebrews     56. philemon
-11. 2-john            34. hosea       57. philippians
-12. 2-kings           35. isaiah      58. proverbs
-13. 2-peter           36. james       59. psalm
-14. 2-samuel          37. jeremiah    60. revelation
-15. 2-thessalonians   38. job         61. romans
-16. 2-timothy         39. joel        62. ruth
-17. 3-john            40. john        63. song-of-solomon
-18. acts              41. jonah       64. titus
-19. amos              42. joshua      65. zechariah
-20. colossians        43. jude        66. zephaniah
-21. daniel            44. judges      67. guidelines
-22. deuteronomy       45. lamentations
-23. ecclesiastes      46. leviticus
+1.  1-chronicles      (12 broadcasts)       24. ephesians   (28 broadcasts)     47. luke        (29 broadcasts)
+2.  1-corinthians     (24 broadcasts)       25. esther      (10 broadcasts)     48. malachi     (15 broadcasts)
+3.  1-john            (25 broadcasts)       26. exodus      (36 broadcasts)     49. mark        (19 broadcasts)
+4.  1-kings           (13 broadcasts        27. ezekiel     (25 broadcasts)     50. matthew     (38 broadcasts)
+5.  1-peter           (15 broadcasts)       28. ezra        (7  broadcasts)     51. micah       (17 broadcasts)
+6.  1-samuel          (15 broadcasts)       29. galatians   (20 broadcasts)     52. nahum       (8  broadcasts)
+7.  1-thessalonians   (14 broadcasts)       30. genesis     (55 broadcasts)     53. nehemiah    (12 broadcasts)
+8.  1-timothy         (12 broadcasts)       31. habakkuk    (10 broadcasts)     54. numbers     (15 broadcasts)
+9.  2-chronicles      (17 broadcasts)       32. haggai      (9  broadcasts)     55. obadiah     (5  broadcasts)
+10. 2-corinthians     (17 broadcasts)       33. hebrews     (43 broadcasts)     56. philemon    (1  broadcasts)
+11. 2-john            (5  broadcasts)       34. hosea       (15 broadcasts)     57. philippians (18 broadcasts)
+12. 2-kings           (15 broadcasts)       35. isaiah      (49 broadcasts)     58. proverbs    (31 broadcasts)
+13. 2-peter           (14 broadcasts)       36. james       (16 broadcasts)     59. psalm       (54 broadcasts)
+14. 2-samuel          (15 broadcasts)       37. jeremiah    (20 broadcasts)     60. revelation  (66 broadcasts)
+15. 2-thessalonians   (6  broadcasts)       38. job         (23 broadcasts)     61. romans      (36 broadcasts)
+16. 2-timothy         (8  broadcasts)       39. joel        (8  broadcasts)     62. ruth        (7  broadcasts)
+17. 3-john            (4  broadcasts)       40. john        (40 broadcasts)     63. solomon     (13 broadcasts)
+18. acts              (35 broadcasts)       41. jonah       (11 broadcasts)     64. titus       (5  broadcasts)
+19. amos              (16 broadcasts)       42. joshua      (13 broadcasts)     65. zechariah   (34 broadcasts)
+20. colossians        (11 broadcasts)       43. jude        (12 broadcasts)     66. zephaniah   (7  broadcasts)
+21. daniel            (30 broadcasts)       44. judges      (11 broadcasts)     67. guidelines  (10 broadcasts)
+22. deuteronomy       (20 broadcasts)       45. lamentations(2  broadcasts)
+23. ecclesiastes      (12 broadcasts)       46. leviticus   (30 broadcasts)
 """
-
 
     mp3_links = []
     title_links = []
@@ -302,12 +305,12 @@ def menu():
     while not user_input:
         try:
             book_mp3 = int(input("Enter Book Number to Download  "))
-            user_input = True # we only get here if the previous line didn't throw an exception
+            user_input = True  # we only get here if the previous line didn't throw an exception
         except ValueError:
-            print(colors.fg.red,"Error:", "  Book Number Expected    'CTRL+C' if you want to exit", colors.reset)
+            print(colors.fg.red, "Error:", "  Book Number Expected    'CTRL+C' if you want to exit", colors.reset)
 
-    if book_mp3 == 68: # Secret Menu Entry
-        print(colors.fg.pink,"Downloading mp3's for All Books...Warning this is a 22GB Download", colors.reset)
+    if book_mp3 == 68:  # Secret Menu Entry
+        print(colors.fg.pink, "Downloading mp3's for All Books...Warning this is a 22GB Download", colors.reset)
         with open('vernon_mcgee-html-links.txt', 'r') as file:
             for line in file:
                 title_links.append(line.strip())
@@ -315,7 +318,7 @@ def menu():
             for line in file:
                 mp3_links.append(line.strip())
     else:
-        print(colors.fg.lightcyan,"Downloading mp3's for " + book[book_mp3 - 1].capitalize(), colors.reset)
+        print(colors.fg.lightcyan, "Downloading mp3's for " + book[book_mp3 - 1].capitalize(), colors.reset)
         with open('vernon_mcgee-html-links.txt', 'r') as file:
             for line in file:
                 if book[book_mp3 - 1] in line:
@@ -324,8 +327,8 @@ def menu():
             for line in file:
                 if book[book_mp3 - 1] in line:
                     mp3_links.append(line.strip())
-    #title_links.reverse()
-    #mp3_links.reverse()
+    # title_links.reverse()
+    # mp3_links.reverse()
     return title_links, mp3_links, book_mp3
 
 
@@ -338,10 +341,11 @@ count = 1
 while count <= end_num:
 
     try:
-        comment, title = bs4_title_cmd(title_links[count-1])
-    except AttributeError: # Data file might be old and one of the files is no loger available
-        print(colors.fg.red,"Episode No Longer Available...",colors.fg.yellow + title_links[count-1], colors.fg.red, "\n Delete data files and re-run", colors.reset)
-        count = count + 1 # Index the counter for the next file to be downloaded
+        comment, title = bs4_title_cmd(title_links[count - 1])
+    except AttributeError:  # Data file might be old and one of the files is no loger available
+        print(colors.fg.red, "Episode No Longer Available...", colors.fg.yellow + title_links[count - 1], colors.fg.red,
+              "\n Delete data files and re-run", colors.reset)
+        count = count + 1  # Index the counter for the next file to be downloaded
         continue
     filename = "Through The Bible with J Vernon Mcgee - {0}"'.mp3'.format(str(title))
     if os.path.isfile(filename):
@@ -349,14 +353,14 @@ while count <= end_num:
         count = count + 1
         continue
     print(colors.reset, "=" * 70)
-    print(colors.fg.lime,"File {} of {}".format(count, end_num))
-    wget_cmd(mp3_links[count-1])
+    print(colors.fg.lime, "File {} of {}".format(count, end_num))
+    wget_cmd(mp3_links[count - 1])
     error_log = eyed3_info()
     count = count + 1
 if error_log == 1:
-    print('*'*70)
-    print(colors.fg.red,"Some Errors were encountered. Check Log file --->  Get-Vernon.log",colors.reset)
-    print('='*70)
+    print('*' * 70)
+    print(colors.fg.red, "Some Errors were encountered. Check Log file --->  Get-Vernon.log", colors.reset)
+    print('=' * 70)
     log = open("Get-Vernon.log", "r")
     for line in log:
         print(line)

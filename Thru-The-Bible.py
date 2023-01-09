@@ -1,90 +1,29 @@
 #!/usr/bin/env python3
-filename = ""
-error_log = "0"
+filename = ''
 from datetime import datetime
 import eyed3
 import os
 import sys
 import signal
+import re
 import glob
 import wget
 from bs4 import BeautifulSoup
 import requests
 import shutil
+import glob
 import textwrap
 from random import randint
 from time import sleep
 
-
-def signal_handler(sig, frame):
-    print('')
-    if filename == "":
-        sys.exit(0)
-        # print(filename)
-    print(colors.fg.red, "Ctrl+C Detected:   Removing Incomplete File ---->  ", filename, colors.reset)
-    for file in glob.glob(filename + '*tmp'):
-        # print(file)
-        os.remove(file)
-    sys.exit(0)
-
-
-signal.signal(signal.SIGINT, signal_handler)
-
-# colored text and background
-"""Colors class:reset all colors with colors.reset
-two sub classes
-fg for foreground
-and bg for background
-use as colors.subclass.colorname.
-i.e. colors.fg.red or colors.bg.green.
-also, the generic bold, disable, underline, reverse, strike through, and invisible
-work with the main class i.e. colors.bold"""
-
-
-class colors:
-    reset = '\033[0m'
-    bold = '\033[01m'
-    disable = '\033[02m'
-    underline = '\033[04m'
-    reverse = '\033[07m'
-    strikethrough = '\033[09m'
-    invisible = '\033[08m'
-
-    class fg:
-        black = '\033[30m'
-        brown = '\033[38;5;94m'
-        red = '\033[31m'
-        green = '\033[32m'
-        orange = '\033[38;5;202m'
-        blue = '\033[34m'
-        purple = '\033[38;5;93m'
-        cyan = '\033[36m'
-        grey = '\033[38;5;240m'
-        lime = '\033[38;5;154m'
-        lightgrey = '\033[37m'
-        darkgrey = '\033[90m'
-        lightred = '\033[91m'
-        lightgreen = '\033[92m'
-        yellow = '\033[38;5;154m'
-        lightblue = '\033[38;5;26m'
-        pink = '\033[38;5;207m'
-        lightcyan = '\033[96m'
-
-    class bg:
-        black = '\033[40m'
-        red = '\033[41m'
-        green = '\033[42m'
-        orange = '\033[43m'
-        blue = '\033[44m'
-        purple = '\033[45m'
-        cyan = '\033[46m'
-        lightgrey = '\033[47m'
+# Local import
+from colors import colors
 
 
 def Banner():
     content = r"""
  (Indivdual 25 Min Radio Broadcast Versions)
- Through The Bible 
+ Thru The Bible 
  with
  Dr. J. Vernon McGee
     _               _
@@ -103,10 +42,33 @@ def Banner():
  //__.....----~~~~._\ | /_.~~~~----.....__\\
 ====================\\|//====================
                     `---`
-
-https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee
 """
-    print(colors.fg.lightblue, content, colors.reset)
+    print(colors.fg.dodger_blue_1, content, colors.reset)
+    print(colors.fg.dark_orange,f"""
+Listen Online
+https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee
+
+Free Study Booklets
+https://ttb.org/resources/electronic-booklets""")
+
+
+
+
+def signal_handler(sig, frame):
+    print('')
+    if filename == "":
+        sys.exit(0)
+        # print(filename)
+    print(colors.fg.red, "Ctrl+C Detected:   Removing Incomplete File ---->  ", filename, colors.reset)
+    for file in glob.glob(filename + '*tmp'):
+        # print(file)
+        os.remove(file)
+    sys.exit(0)
+
+
+signal.signal(signal.SIGINT, signal_handler)
+
+
 
 
 def duration_from_seconds(s):
@@ -119,13 +81,13 @@ def duration_from_seconds(s):
     return timelapsed
 
 
-def eyed3_info():
+def eyed3_info(filename, comment, title):
     # global error_log
     try:
 
         print("\033[2A", "\033[1G", "\033[J")
         print('EyeD3 MP3 Tagger\n')
-        print(colors.fg.purple, "Setting mp3 Tags \t[✔]\n")
+        print(colors.fg.purple_1b, "Setting mp3 Tags \t[✔]\n")
         audiofile = eyed3.load(filename)
         eyed3.log.setLevel("ERROR")
         audiofile.initTag()
@@ -140,23 +102,23 @@ def eyed3_info():
         audiofile.tag.save(filename, version=(2, 3, 0))
         print(colors.fg.cyan, "Displaying mp3 Tags \t[✔]\n")
         audiofile = eyed3.load(filename)
-        print(colors.fg.grey, 'File Name:......: ', colors.fg.green, filename, sep="")
-        print(colors.fg.grey, 'Artist..........: ', colors.fg.orange, audiofile.tag.artist, sep="")
-        print(colors.fg.grey, 'Title...........: ', colors.fg.orange, audiofile.tag.title, sep="")
-        print(colors.fg.grey, 'Album...........: ', colors.fg.orange, audiofile.tag.album, sep="")
-        print(colors.fg.grey, 'Album Artist....: ', colors.fg.orange, audiofile.tag.album_artist, sep="")
-        print(colors.fg.grey, 'Duration........: ', colors.fg.orange, duration_from_seconds(audiofile.info.time_secs),
+        print(colors.fg.grey_19, 'File Name:......: ', colors.fg.green, filename, sep="")
+        print(colors.fg.grey_19, 'Artist..........: ', colors.fg.orange_3, audiofile.tag.artist, sep="")
+        print(colors.fg.grey_19, 'Title...........: ', colors.fg.orange_3, audiofile.tag.title, sep="")
+        print(colors.fg.grey_19, 'Album...........: ', colors.fg.orange_3, audiofile.tag.album, sep="")
+        print(colors.fg.grey_19, 'Album Artist....: ', colors.fg.orange_3, audiofile.tag.album_artist, sep="")
+        print(colors.fg.grey_19, 'Duration........: ', colors.fg.orange_3, duration_from_seconds(audiofile.info.time_secs),
               sep="")
-        print(colors.fg.grey, 'Filesize........: ', colors.fg.orange,
+        print(colors.fg.grey_19, 'Filesize........: ', colors.fg.orange_3,
               "{0:.2f}".format(audiofile.info.size_bytes / 1048576), 'MB', sep="")
-        print(colors.fg.grey, 'BitRate.........: ', colors.fg.orange, audiofile.info.bit_rate_str, sep="")
-        print(colors.fg.grey, 'Sample Rate.....: ', colors.fg.orange, audiofile.info.sample_freq, sep="")
-        print(colors.fg.grey, 'Mode............: ', colors.fg.orange, audiofile.info.mode, sep="")
-        print(colors.fg.grey, 'Genre...........: ', colors.fg.orange, audiofile.tag.genre, sep="")
-        print(colors.fg.grey, 'Website.........: ', colors.fg.orange, audiofile.tag.artist_url, sep="")
-        print(colors.fg.grey, 'Comment.........: ', sep="", end="")
-        print(colors.fg.lightblue, end="")
-        print(audiofile.tag.comments[0].text)
+        print(colors.fg.grey_19, 'BitRate.........: ', colors.fg.orange_3, audiofile.info.bit_rate_str, sep="")
+        print(colors.fg.grey_19, 'Sample Rate.....: ', colors.fg.orange_3, audiofile.info.sample_freq, sep="")
+        print(colors.fg.grey_19, 'Mode............: ', colors.fg.orange_3, audiofile.info.mode, sep="")
+        print(colors.fg.grey_19, 'Genre...........: ', colors.fg.orange_3, audiofile.tag.genre, sep="")
+        print(colors.fg.grey_19, 'Website.........: ', colors.fg.orange_3, audiofile.tag.artist_url, sep="")
+        print(colors.fg.grey_19, 'Comment.........: ', sep="", end="")
+        print(colors.fg.dodger_blue_1, end="")
+        print(textwrap.fill(str(audiofile.tag.comments[0].text),width=70, subsequent_indent='\t     '))
     except Exception:
         error_log = 1
         original = sys.stdout
@@ -170,90 +132,25 @@ def eyed3_info():
         print('=' * 75)
         sys.stdout.close()
         sys.stdout = original
-        print(colors.fg.red, "Mp3 File Error...EyeD3 Failed to set Tags for ", colors.fg.pink, filename, colors.reset)
+        print(colors.fg.red, "Mp3 File Error...EyeD3 Failed to set Tags for ", colors.fg.hot_pink_1b, filename, colors.reset)
         return error_log
         pass
     print(colors.reset)
 
 
-def wget_cmd(mp3_url):
-    # if os.path.isfile(filename):
+
+
+def wget_cmd(mp3_url,filename):
+    #if os.path.isfile(filename):
     # os.remove(filename)
-    print(colors.fg.grey, "Brief Random Delay to avoid remote server congestion ")
+    print(colors.fg.grey_19, "Brief Random Delay to avoid remote server congestion ")
     sleep(randint(3, 8))
-    print(colors.fg.lightblue, "Downloading........", filename, colors.fg.grey)
+    print(colors.fg.dodger_blue_1, "Downloading........", filename, colors.reset)
+    #print(mp3_url)
     wget.download(mp3_url, out=filename)
+    print('')
 
 
-def get_data_files():
-    print(colors.fg.lightcyan, "Checking for Cover Art File", colors.reset)
-    if os.path.isfile('FRONT_COVER1.jpg'):
-        print(colors.fg.cyan, "Cover Art File Found [✔]", colors.reset)
-    else:
-        print(colors.fg.red,
-              "Cover Art File not Found...[X]...A Sutiable Cover Art file named FRONT_COVER1.jpg is required.",
-              colors.reset)
-        quit()
-    print(colors.fg.lightcyan, "Checking for Data Files", colors.reset)
-    if os.path.isfile('vernon_mcgee-html-links.txt') and os.path.isfile('vernon_mcgee-mp3-links.txt'):
-        print(colors.fg.cyan, "Data Files Found [✔]", colors.reset)
-    else:
-        print(colors.fg.red, "Data Files not Found...[X]...Downloading New Data Files.", colors.reset)
-        if os.path.isfile('vernon_mcgee-html-links.txt'):
-            os.remove('vernon_mcgee-html-links.txt')
-        if os.path.isfile('vernon_mcgee-mp3-links.txt'):
-            os.remove('vernon_mcgee-mp3-links.txt')
-
-        for i in range(1, 12):
-            print("Retrieving Page {} of 11".format(i))
-            html_text = requests.get(
-                "https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/listen/?page={}".format(i)).text
-            soup = BeautifulSoup(html_text, 'lxml')
-            # link = soup.find_all(href="https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/listen/")
-            link = soup.find_all("a", {'data-action': "archive"})
-            # link = soup.find_all('a',attrs={'data-action':"archive"})[]['href']
-            # original_stdout = sys.stdout  # Save a reference to the original standard output
-
-            for links in link:
-                with open('vernon_mcgee-html-links.txt', 'a+') as file:
-                    # sys.stdout = file  # Change the standard output to the file we created.
-                    soup.find_all("a", href=True)
-                    # a_file.write(str(links) + '\n')
-                    file.write(links['href'] + '\n')
-                    # print(links['href'])
-                    # sys.stdout = original_stdout  # Reset the standard output to its original value
-        src = "vernon_mcgee-html-links.txt"
-        dst = "vernon_mcgee-mp3-links.txt"
-        shutil.copyfile(src, dst)
-        # read input file
-        fin = open("vernon_mcgee-mp3-links.txt", "rt")
-        # read file contents to string
-        data = fin.read()
-        # replace all occurrences of the required string
-        data = data.replace('.html', '.mp3').replace('listen/', 'subscribe/podcast/')
-        # close the input file
-        fin.close()
-        # open the input file in write mode
-        fin = open("vernon_mcgee-mp3-links.txt", "wt")
-        # overwrite the input file with the resulting data
-        fin.write(data)
-        # close the file
-        fin.close()
-        print("\033[15A", "\033[1G", "\033[J")
-
-
-def bs4_title_cmd(html_url):
-    html_text = requests.get(html_url).text
-    soup = BeautifulSoup(html_text, 'lxml')
-    # Get the comment & title from the HTML element
-    comment = soup.find("div", class_="description").text.lstrip()
-    # Wrap the text and limit the line length to 80
-    comment = textwrap.fill(comment, width=80)
-    # get the title from the H2 tag, strip leading white space and replace the funky double dash with a real double dash
-    title = soup.find("div", class_="overlay2").h2.text.strip().replace('—', '--')
-    # alternate method of getting the title
-    # title = soup.head.title.text.split(' -')[0].strip().replace('—', '--')
-    return comment, title
 
 
 def books():
@@ -273,7 +170,7 @@ def menu():
 1.  1-chronicles      (12 broadcasts)       24. ephesians   (28 broadcasts)     47. luke        (29 broadcasts)
 2.  1-corinthians     (24 broadcasts)       25. esther      (10 broadcasts)     48. malachi     (15 broadcasts)
 3.  1-john            (25 broadcasts)       26. exodus      (36 broadcasts)     49. mark        (19 broadcasts)
-4.  1-kings           (13 broadcasts        27. ezekiel     (25 broadcasts)     50. matthew     (38 broadcasts)
+4.  1-kings           (13 broadcasts)       27. ezekiel     (25 broadcasts)     50. matthew     (38 broadcasts)
 5.  1-peter           (15 broadcasts)       28. ezra        (7  broadcasts)     51. micah       (17 broadcasts)
 6.  1-samuel          (15 broadcasts)       29. galatians   (20 broadcasts)     52. nahum       (8  broadcasts)
 7.  1-thessalonians   (14 broadcasts)       30. genesis     (55 broadcasts)     53. nehemiah    (12 broadcasts)
@@ -293,10 +190,11 @@ def menu():
 21. daniel            (30 broadcasts)       44. judges      (11 broadcasts)     67. guidelines  (10 broadcasts)
 22. deuteronomy       (20 broadcasts)       45. lamentations(2  broadcasts)
 23. ecclesiastes      (12 broadcasts)       46. leviticus   (30 broadcasts)
+
+
+70. The complete compilation of Dr. McGee's full Notes & Outlines all in one eBook!
 """
 
-    mp3_links = []
-    title_links = []
 
     print(colors.fg.green, menu_banner, colors.reset)
 
@@ -310,57 +208,113 @@ def menu():
             print(colors.fg.red, "Error:", "  Book Number Expected    'CTRL+C' if you want to exit", colors.reset)
 
     if book_mp3 == 68:  # Secret Menu Entry
-        print(colors.fg.pink, "Downloading mp3's for All Books...Warning this is a 22GB Download", colors.reset)
-        with open('vernon_mcgee-html-links.txt', 'r') as file:
-            for line in file:
-                title_links.append(line.strip())
-        with open('vernon_mcgee-mp3-links.txt', 'r') as file:
-            for line in file:
-                mp3_links.append(line.strip())
+        print(colors.fg.hot_pink_1b, "Downloading mp3's for All Books...Warning this is a 22GB Download", colors.reset)
+        #with open('vernon_mcgee-html-links.txt', 'r') as file:
+        book_mp3 = 1
+        for x in book:
+            get_files(book, book_mp3)
+            book_mp3 += 1
+    
+    elif book_mp3 == 70:
+        print(colors.fg.dodger_blue_1, "Downloading........Briefing the Bible\n This is the complete compilation of Dr. McGee's full Notes & Outlines you're used to, now all in one eBook!", colors.reset)
+        #print(mp3_url)
+        wget.download('https://ttb.org/docs/default-source/extra-materials/ttb_-briefing-the-bible_digital-book.pdf', out="1.Thru the Bible - Briefing the Bible eBook.pdf")
+        print('')
+
     else:
-        print(colors.fg.lightcyan, "Downloading mp3's for " + book[book_mp3 - 1].capitalize(), colors.reset)
-        with open('vernon_mcgee-html-links.txt', 'r') as file:
-            for line in file:
-                if book[book_mp3 - 1] in line:
-                    title_links.append(line.strip())
-        with open('vernon_mcgee-mp3-links.txt', 'r') as file:
-            for line in file:
-                if book[book_mp3 - 1] in line:
-                    mp3_links.append(line.strip())
-    # title_links.reverse()
-    # mp3_links.reverse()
-    return title_links, mp3_links, book_mp3
+        get_files(book, book_mp3)
+    
+def get_files(book, book_mp3):
+    print(colors.fg.turquoise_4, f"Downloading mp3's for " ,f"{book[book_mp3 - 1]}", colors.reset)
+    with open('vernon_mcgee-html-links.txt', 'r') as file:
+        for line in file:
+            thebook = book[book_mp3 - 1].lower()
+            #print(thebook)
+            line = line.strip()
+            #print(line)
+            if line.startswith(f"https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/series/{thebook}"):
+                line = line.strip()
+                print("Retrieving Broadcast Page")
+                print(f"Broadcast page is ",colors.fg.hot_pink_1b, f"{line}\n",colors.reset)
+
+                html_text = requests.get(line)
+                soup = BeautifulSoup(html_text.text, 'html.parser')
+                #link = soup.find_all(href="https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/listen/")
+                num_of_links = []
+
+                for link in soup.find_all('a', href=True):
+                    #link = link['href'].strip()
+                    if re.search(r'(https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/listen/\w.*)', str(link)):
+                        #print(link['href'])
+                        num_of_links.append(link['href'])
+                no_broadcasts = len(num_of_links) / 2
+                mp3_url = None
+                counter = 1
+                for link in soup.find_all('a', href=True):
+                    if re.search(r'(https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/listen/\w.*)', str(link)):
+                        if link['href'] == mp3_url:
+                            continue
+                        else:
+                            mp3_url = link['href']
+                            html_text = requests.get(mp3_url)
+                            soup = BeautifulSoup(html_text.text, 'html.parser')
+                            title = soup.find('div', class_="details").h2.text.replace('—', '--')
+                            comment = soup.find('div', class_="fs-16 desc epDesc").p.text
+                            comment = comment.replace('\n', ' ')
+                            #comment = textwrap.fill(comment, width=80)
+                            mp3_url = mp3_url.replace('/listen/', '/subscribe/podcast/')
+                            mp3_url = mp3_url.replace('.html', '.mp3')
+                            print(colors.fg.blue_1,'=' * 80,colors.reset)
+                            print(f"File {counter} of {no_broadcasts:.0f}")
+                            print(colors.fg.orange_red_1,f"Title is:  {title}\nMP3 URL:", colors.fg.yellow_2, f"   {mp3_url}\n",colors.reset,sep='')
+                            #print(colors.fg.dodger_blue_1,comment,'\n\n',colors.reset)
+                            global filename
+                            filename = f"Thru The Bible with J Vernon Mcgee - {title}.mp3"
+                            if os.path.isfile(filename):
+                                print(colors.fg.red, f"Existing File Found........",colors.fg.green,f"Skipping",colors.reset)
+                                mp3_url = link['href']
+                                counter += 1
+                                continue
+                            while True:
+                                try:
+                                    wget_cmd(mp3_url, filename)
+                                except (AttributeError, ConnectionResetError):  # Data file might be old and one of the files is no loger available
+                                    #print(colors.fg.red, f"Episode No Longer Available...", colors.fg.yellow, f" {title}", colors.fg.red,
+                                    #      "\n Delete data file and re-run", colors.reset)
+                                    #counter += 1
+                                    continue
+                                break
+                            eyed3_info(filename, comment, title)
+                            mp3_url = link['href']
+                            counter += 1
+                print('')
+                #quit()
+
+
+
+
+
+
+
+def get_data_files():
+
+    if not os.path.isfile('vernon_mcgee-html-links.txt'):# and os.path.isfile('vernon_mcgee-mp3-links.txt'):
+        print(colors.fg.red, "Data File not Found...[X]...Downloading New Data Files.", colors.reset)
+        print("Retrieving New Data File")
+        html_text = requests.get("https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/series/")
+        soup = BeautifulSoup(html_text.text, 'html.parser')
+        link = soup.find_all(href="https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/series/")
+
+        for link in soup.find_all('a', href=True):
+            with open('vernon_mcgee-html-links.txt', 'a+') as file:
+                if not re.search(r'(https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/series/\w+)', str(link)):
+                #if link.get('href').startswith("https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/series/"):
+                    continue
+                else:
+                    file.write(f"{link['href']} \n")
 
 
 Banner()
 get_data_files()
 book = books()
-title_links, mp3_links, book_mp3 = menu()
-end_num = len(title_links)
-count = 1
-while count <= end_num:
-
-    try:
-        comment, title = bs4_title_cmd(title_links[count - 1])
-    except AttributeError:  # Data file might be old and one of the files is no loger available
-        print(colors.fg.red, "Episode No Longer Available...", colors.fg.yellow + title_links[count - 1], colors.fg.red,
-              "\n Delete data files and re-run", colors.reset)
-        count = count + 1  # Index the counter for the next file to be downloaded
-        continue
-    filename = "Through The Bible with J Vernon Mcgee - {0}"'.mp3'.format(str(title))
-    if os.path.isfile(filename):
-        print(colors.fg.brown, "Existing File Found......Skipping", colors.fg.orange, title, colors.reset)
-        count = count + 1
-        continue
-    print(colors.reset, "=" * 70)
-    print(colors.fg.lime, "File {} of {}".format(count, end_num))
-    wget_cmd(mp3_links[count - 1])
-    error_log = eyed3_info()
-    count = count + 1
-if error_log == 1:
-    print('*' * 70)
-    print(colors.fg.red, "Some Errors were encountered. Check Log file --->  Get-Vernon.log", colors.reset)
-    print('=' * 70)
-    log = open("Get-Vernon.log", "r")
-    for line in log:
-        print(line)
+menu()

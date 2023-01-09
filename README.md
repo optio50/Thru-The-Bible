@@ -14,7 +14,8 @@ Install & Run
 `pip install lxml requests bs4 wget eyed3`    
 `./Thru-The-Bible.py`
 
-![ScreenShot](https://raw.githubusercontent.com/optio50/Thru-The-Bible/main/Thru-The-Bible.png?raw=true|alt=octocat)    
+![ScreenShot](https://raw.githubusercontent.com/optio50/Thru-The-Bible/main/Thru-The-Bible.png?raw=true|alt=octocat)   
+![ScreenShot](https://raw.githubusercontent.com/optio50/Thru-The-Bible/main/Thru-The-Bible2.png?raw=true|alt=octocat)   
 Welcome aboard the "Bible Bus"—what Dr. J. Vernon McGee affectionately called our five-year journey through the whole Word of God.    
 What makes the Bible Bus unique is the systematic way we study the whole Bible over five years.    
 You can hop on the Bus at any stop and ride for as long as you like.    

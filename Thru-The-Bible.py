@@ -247,7 +247,7 @@ def get_files(book, book_mp3):
                     if re.search(r'(https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/listen/\w.*)', str(link)):
                         #print(link['href'])
                         num_of_links.append(link['href'])
-                no_broadcasts = len(num_of_links) / 2
+                no_broadcasts = len(num_of_links)
                 mp3_url = None
                 counter = 1
                 for link in soup.find_all('a', href=True):
@@ -311,7 +311,7 @@ def get_data_files():
                 #if link.get('href').startswith("https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/series/"):
                     continue
                 else:
-                    file.write(f"{link['href']} \n")
+                    file.write(f"{link['href'].lower()} \n")
 
 
 Banner()

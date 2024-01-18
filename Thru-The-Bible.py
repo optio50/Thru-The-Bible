@@ -250,7 +250,7 @@ def get_files(book, book_mp3):
                 no_broadcasts = len(num_of_links)
                 mp3_url = None
                 counter = 1
-                for link in soup.find_all('a', href=True):
+                for link in soup.find_all('a', href=True)[::-1]: # reverse the order of the search to download in numerical order
                     if re.search(r'(https://www.oneplace.com/ministries/thru-the-bible-with-j-vernon-mcgee/listen/\w.*)', str(link)):
                         if link['href'] == mp3_url:
                             continue
